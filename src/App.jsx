@@ -74,37 +74,34 @@ function App() {
     // html2canvas sometimes ignores elements that are positioned -9999px offscreen.
     element.style.top = '0px';
     element.style.left = '0px';
-    element.style.zIndex = '-1000';
-
     // Wait for the browser to apply styles and decode any base64 images
     await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
-      const canvas = await html2canvas(element, { scale: 1.5, useCORS: true });
-      // Compress the image heavily as a JPEG instead of a massive PNG
-      const imgData = canvas.toDataURL('image/jpeg', 0.7);
-      
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pdfWidth;
-      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      const pages = [document.getElementById('pdf-page-1'), document.getElementById('pdf-page-2')];
+      
+      for (let i = 0; i < pages.length; i++) {
+        const pageElement = pages[i];
+        if (!pageElement) continue;
+        
+        const canvas = await html2canvas(pageElement, { 
+          scale: 1.5, 
+          useCORS: true,
+          scrollY: 0,
+          windowHeight: pageElement.scrollHeight 
+        });
+        
+        const imgData = canvas.toDataURL('image/jpeg', 0.8);
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        if (i > 0) pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgHeight);
       }
       
-      pdf.save('recruiter-feedback.pdf');
-
       const pdfBase64 = pdf.output('datauristring');
       
       const response = await fetch('/api/send-email', {
@@ -349,104 +346,107 @@ function App() {
         </form>
       </div>
 
-
       {/* Printable PDF Layout (Visually hidden but rendered for html2canvas) */}
-      <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', padding: '40px', backgroundColor: 'white', color: 'black', fontFamily: '"Times New Roman", Times, serif', position: 'absolute', top: '-9999px', left: '-9999px', fontSize: '14px', lineHeight: '1.5' }}>
+      <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', backgroundColor: 'white', color: 'black', fontFamily: '"Times New Roman", Times, serif', position: 'absolute', top: '-9999px', left: '-9999px', fontSize: '14px', lineHeight: '1.5' }}>
         
-        {/* Letterhead */}
-        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '10px', marginBottom: '20px' }}>
-          <img src="/logo.png?v=2" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
-          <div style={{ textAlign: 'center', flexGrow: 1 }}>
-            <h1 style={{ margin: '0', fontSize: '24px', textTransform: 'uppercase' }}>National Institute of Technology Rourkela</h1>
-            <h2 style={{ margin: '5px 0', fontSize: '18px' }}>Career Development Centre</h2>
-            <h3 style={{ margin: '0', fontSize: '16px', textDecoration: 'underline' }}>Recruiter's Feedback Form</h3>
-          </div>
-        </div>
-
-        {/* Basic Info */}
-        <div style={{ fontSize: '14px', lineHeight: '1.6' }}>
-          <p style={{ textDecoration: 'underline', fontWeight: 'bold', margin: '0 0 10px 0' }}>Recruitment Statistics:</p>
-          <p style={{ margin: '6px 0' }}>➢ Name of the Company: {formData.companyName}</p>
-          <p style={{ margin: '6px 0' }}>➢ Date & duration of visit: {formData.visitDate} {formData.visitDuration ? `(${formData.visitDuration})` : ''}</p>
-          <p style={{ margin: '6px 0' }}>➢ Concerned Company personnel: {formData.personnel}</p>
-          <p style={{ margin: '6px 0' }}>➢ Branches eligible: {formData.branches}</p>
-          <p style={{ margin: '6px 0' }}>➢ Number of students selected/shortlisted: {formData.studentsSelected}</p>
-          
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px', marginBottom: '5px' }}>Our hospitality</h3>
-          <h4 style={{ textDecoration: 'underline', fontSize: '14px', margin: '10px 0 5px 0' }}>Travel:</h4>
-          <p style={{ margin: '6px 0' }}>➢ Did you find it convenient to travel to/in Rourkela? ({formData.travelConvenient || '   '})</p>
-          <p style={{ margin: '6px 0' }}>➢ Were necessary travel arrangements made while in campus/at Rourkela? ({formData.travelArrangements || '   '})</p>
-          <p style={{ margin: '6px 0' }}>➢ Please share with us, problems, if any, which you had to face during your travel: {formData.travelProblems}</p>
-          <p style={{ margin: '6px 0' }}>Was immediate action taken? ({formData.travelActionTaken || '   '})</p>
-          
-          <p style={{ margin: '15px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Accommodation:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
-          
-          <div style={{ paddingLeft: '20px' }}>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Your first impression</span><span>: {formData.accFirstImpression}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Ambience, décor, spaciousness</span><span>: {formData.accAmbience}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Room facilities like air conditioning, TV, etc.:</span><span>: {formData.accFacilities}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>4. Sanitation facilities and cleanliness</span><span>: {formData.accSanitation}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>5. Room services</span><span>: {formData.accServices}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>6. Quality of food/refreshments served during you course of stay</span><span>: {formData.accFood}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>7. The warmth and friendliness of the staff</span><span>: {formData.accWarmth}</span></p>
-          </div>
-          
-          <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.stayActionTaken || '   '})</p>
-          <p style={{ margin: '6px 0' }}>{formData.stayProblems}</p>
-          
-          <div style={{ pageBreakBefore: 'always', marginTop: '30px' }}></div>
-          
-          <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Your recruitment program at our campus:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
-          
-          <div style={{ paddingLeft: '20px' }}>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Technical facilities available like audiovisual aid, internet facilities, etc.</span><span>: {formData.recTechFacilities}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Co-ordination of the Department of training and placement (staff and coordinators)</span><span>: {formData.recCoordination}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Ambience/comfort level of the venue for PPT's, group discussion and interviews</span><span>: {formData.recAmbience}</span></p>
-          </div>
-          
-          <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.recActionTaken || '   '})</p>
-          <p style={{ margin: '6px 0' }}>{formData.recProblems}</p>
-
-          <div style={{ pageBreakBefore: 'always', marginTop: '30px' }}></div>
-
-          <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Our campus and students:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
-          
-          <div style={{ paddingLeft: '20px' }}>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Campus arena and the infrastructure at hand</span><span>: {formData.camArena}</span></p>
-            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Intellectual capital</span><span>: {formData.camCapital}</span></p>
-          </div>
-          
-          <p style={{ margin: '20px 0 5px 0' }}>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
-          <div style={{ minHeight: '30px' }}>{formData.impressiveQualities}</div>
-          
-          <p style={{ margin: '20px 0 5px 0' }}>Please comment on areas where the students have a scope for improvement/any quality which is highly essential to be improved and worked upon:</p>
-          <div style={{ minHeight: '30px' }}>{formData.areasForImprovement}</div>
-          
-          <p style={{ fontWeight: 'bold', textDecoration: 'underline', marginTop: '30px', marginBottom: '5px' }}>General Review:</p>
-          <p style={{ margin: '5px 0' }}>Overall comments/suggestions:</p>
-          <div style={{ minHeight: '30px' }}>{formData.overallComments}</div>
-          
-          <p style={{ margin: '20px 0' }}>Would you like to visit our campus again? ({formData.visitAgain || '   '})</p>
-          
-          <p style={{ margin: '20px 0' }}>Thank you!</p>
-        </div>
-
-        {/* Page Break for Signatures */}
-        <div style={{ pageBreakInside: 'avoid', marginTop: '40px' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '250px' }}>
-              {signatureDataUrl ? (
-                <img id="pdf-signature-image" src={signatureDataUrl} alt="Signature" style={{ height: '50px', width: 'auto', objectFit: 'contain', borderBottom: '1px solid black', marginBottom: '5px' }} />
-              ) : (
-                <div id="pdf-signature-placeholder" style={{ width: '200px', borderBottom: '1px solid black', height: '50px', marginBottom: '5px' }}></div>
-              )}
-              <div style={{ fontWeight: 'bold', paddingTop: '5px', textDecoration: 'underline' }}>Signature of Recruiter</div>
+        {/* --- PDF PAGE 1 --- */}
+        <div id="pdf-page-1" style={{ padding: '40px', minHeight: '1120px', backgroundColor: 'white' }}>
+          {/* Letterhead */}
+          <div style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '10px', marginBottom: '20px' }}>
+            <img src="/logo.png?v=2" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
+            <div style={{ textAlign: 'center', flexGrow: 1 }}>
+              <h1 style={{ margin: '0', fontSize: '24px', textTransform: 'uppercase' }}>National Institute of Technology Rourkela</h1>
+              <h2 style={{ margin: '5px 0', fontSize: '18px' }}>Career Development Centre</h2>
+              <h3 style={{ margin: '0', fontSize: '16px', textDecoration: 'underline' }}>Recruiter's Feedback Form</h3>
             </div>
           </div>
-          <div style={{ textAlign: 'center', marginTop: '40px', fontWeight: 'bold' }}>17</div>
+
+          {/* Basic Info */}
+          <div style={{ fontSize: '14px', lineHeight: '1.6' }}>
+            <p style={{ textDecoration: 'underline', fontWeight: 'bold', margin: '0 0 10px 0' }}>Recruitment Statistics:</p>
+            <p style={{ margin: '6px 0' }}>➢ Name of the Company: {formData.companyName}</p>
+            <p style={{ margin: '6px 0' }}>➢ Date & duration of visit: {formData.visitDate} {formData.visitDuration ? `(${formData.visitDuration})` : ''}</p>
+            <p style={{ margin: '6px 0' }}>➢ Concerned Company personnel: {formData.personnel}</p>
+            <p style={{ margin: '6px 0' }}>➢ Branches eligible: {formData.branches}</p>
+            <p style={{ margin: '6px 0' }}>➢ Number of students selected/shortlisted: {formData.studentsSelected}</p>
+            
+            <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px', marginBottom: '5px' }}>Our hospitality</h3>
+            <h4 style={{ textDecoration: 'underline', fontSize: '14px', margin: '10px 0 5px 0' }}>Travel:</h4>
+            <p style={{ margin: '6px 0' }}>➢ Did you find it convenient to travel to/in Rourkela? ({formData.travelConvenient || '   '})</p>
+            <p style={{ margin: '6px 0' }}>➢ Were necessary travel arrangements made while in campus/at Rourkela? ({formData.travelArrangements || '   '})</p>
+            <p style={{ margin: '6px 0' }}>➢ Please share with us, problems, if any, which you had to face during your travel: {formData.travelProblems}</p>
+            <p style={{ margin: '6px 0' }}>Was immediate action taken? ({formData.travelActionTaken || '   '})</p>
+            
+            <p style={{ margin: '15px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Accommodation:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
+            
+            <div style={{ paddingLeft: '20px' }}>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Your first impression</span><span>: {formData.accFirstImpression}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Ambience, décor, spaciousness</span><span>: {formData.accAmbience}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Room facilities like air conditioning, TV, etc.:</span><span>: {formData.accFacilities}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>4. Sanitation facilities and cleanliness</span><span>: {formData.accSanitation}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>5. Room services</span><span>: {formData.accServices}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>6. Quality of food/refreshments served during you course of stay</span><span>: {formData.accFood}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>7. The warmth and friendliness of the staff</span><span>: {formData.accWarmth}</span></p>
+            </div>
+            
+            <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.stayActionTaken || '   '})</p>
+            <p style={{ margin: '6px 0' }}>{formData.stayProblems}</p>
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '20px', fontWeight: 'bold' }}>16</div>
         </div>
 
+        {/* --- PDF PAGE 2 --- */}
+        <div id="pdf-page-2" style={{ padding: '40px', minHeight: '1120px', backgroundColor: 'white' }}>
+          <div style={{ fontSize: '14px', lineHeight: '1.6' }}>
+            <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Your recruitment program at our campus:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
+            
+            <div style={{ paddingLeft: '20px' }}>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Technical facilities available like audiovisual aid, internet facilities, etc.</span><span>: {formData.recTechFacilities}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Co-ordination of the Department of training and placement (staff and coordinators)</span><span>: {formData.recCoordination}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Ambience/comfort level of the venue for PPT's, group discussion and interviews</span><span>: {formData.recAmbience}</span></p>
+            </div>
+            
+            <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.recActionTaken || '   '})</p>
+            <p style={{ margin: '6px 0' }}>{formData.recProblems}</p>
+
+            <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Our campus and students:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
+            
+            <div style={{ paddingLeft: '20px' }}>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Campus arena and the infrastructure at hand</span><span>: {formData.camArena}</span></p>
+              <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Intellectual capital</span><span>: {formData.camCapital}</span></p>
+            </div>
+            
+            <p style={{ margin: '20px 0 5px 0' }}>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
+            <div style={{ minHeight: '30px' }}>{formData.impressiveQualities}</div>
+            
+            <p style={{ margin: '20px 0 5px 0' }}>Please comment on areas where the students have a scope for improvement/any quality which is highly essential to be improved and worked upon:</p>
+            <div style={{ minHeight: '30px' }}>{formData.areasForImprovement}</div>
+            
+            <p style={{ fontWeight: 'bold', textDecoration: 'underline', marginTop: '30px', marginBottom: '5px' }}>General Review:</p>
+            <p style={{ margin: '5px 0' }}>Overall comments/suggestions:</p>
+            <div style={{ minHeight: '30px' }}>{formData.overallComments}</div>
+            
+            <p style={{ margin: '20px 0' }}>Would you like to visit our campus again? ({formData.visitAgain || '   '})</p>
+            
+            <p style={{ margin: '20px 0' }}>Thank you!</p>
+          </div>
+
+          {/* Page Break for Signatures */}
+          <div style={{ pageBreakInside: 'avoid', marginTop: '40px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '250px' }}>
+                {signatureDataUrl ? (
+                  <img id="pdf-signature-image" src={signatureDataUrl} alt="Signature" style={{ height: '50px', width: 'auto', objectFit: 'contain', borderBottom: '1px solid black', marginBottom: '5px' }} />
+                ) : (
+                  <div id="pdf-signature-placeholder" style={{ width: '200px', borderBottom: '1px solid black', height: '50px', marginBottom: '5px' }}></div>
+                )}
+                <div style={{ fontWeight: 'bold', paddingTop: '5px', textDecoration: 'underline' }}>Signature of Recruiter</div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'center', marginTop: '40px', fontWeight: 'bold' }}>17</div>
+          </div>
+        </div>
       </div>
     </div>
   );
