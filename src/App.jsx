@@ -410,7 +410,7 @@ function App() {
         
         {/* Letterhead */}
         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '10px', marginBottom: '20px' }}>
-          <img src="/logo.jpg" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
+          <img src="/logo.png" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
           <div style={{ textAlign: 'center', flexGrow: 1 }}>
             <h1 style={{ margin: '0', fontSize: '24px', textTransform: 'uppercase' }}>National Institute of Technology Rourkela</h1>
             <h2 style={{ margin: '5px 0', fontSize: '18px' }}>Career Development Centre</h2>
