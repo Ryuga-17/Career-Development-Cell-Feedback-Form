@@ -405,24 +405,109 @@ function App() {
           </ol>
           <p>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
           <p style={{ minHeight: '40px' }}><strong>{formData.impressiveQualities}</strong></p>
-          <p>Please comment on areas where the students have a scope for improvement/any quality which is highly essential to be improved and worked upon:</p>
-          <p style={{ minHeight: '40px' }}><strong>{formData.areasForImprovement}</strong></p>
-          
-          <h3 style={{ textDecoration: 'underline', fontSize: '14px', marginTop: '20px' }}>General Review:</h3>
-          <p>Overall comments/suggestions: {formData.overallComments}</p>
-          <p>Would you like to visit our campus again? ({formData.visitAgain || '   '})</p>
-          
-          <p style={{ marginTop: '20px' }}>Thank you!</p>
-          
-          <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            {signatureDataUrl ? (
-              <img src={signatureDataUrl} alt="Signature" style={{ height: '70px', width: 'auto', objectFit: 'contain', borderBottom: '1px solid black', marginBottom: '5px' }} />
-            ) : (
-              <div style={{ width: '200px', borderBottom: '1px solid black', height: '50px', marginBottom: '5px' }}></div>
-            )}
-            <div style={{ paddingRight: '20px' }}>Signature of Recruiter</div>
+      {/* Printable PDF Layout (Visually hidden but rendered for html2canvas) */}
+      <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', padding: '40px', backgroundColor: 'white', color: 'black', fontFamily: '"Times New Roman", Times, serif', position: 'absolute', top: '-9999px', left: '-9999px', fontSize: '14px', lineHeight: '1.5' }}>
+        
+        {/* Letterhead */}
+        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '10px', marginBottom: '20px' }}>
+          <img src="/logo.jpg" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
+          <div style={{ textAlign: 'center', flexGrow: 1 }}>
+            <h1 style={{ margin: '0', fontSize: '24px', textTransform: 'uppercase' }}>National Institute of Technology Rourkela</h1>
+            <h2 style={{ margin: '5px 0', fontSize: '18px' }}>Career Development Centre</h2>
+            <h3 style={{ margin: '0', fontSize: '16px', textDecoration: 'underline' }}>Recruiter's Feedback Form</h3>
           </div>
         </div>
+
+        {/* Basic Info Table */}
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+          <tbody>
+            <tr>
+              <td style={{ padding: '8px', border: '1px solid black', fontWeight: 'bold', width: '30%' }}>Company Name:</td>
+              <td style={{ padding: '8px', border: '1px solid black' }}>{formData.companyName}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '8px', border: '1px solid black', fontWeight: 'bold' }}>Name of the evaluating person:</td>
+              <td style={{ padding: '8px', border: '1px solid black' }}>{formData.evaluatorName}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '8px', border: '1px solid black', fontWeight: 'bold' }}>Designation:</td>
+              <td style={{ padding: '8px', border: '1px solid black' }}>{formData.designation}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '8px', border: '1px solid black', fontWeight: 'bold' }}>Date of Visit:</td>
+              <td style={{ padding: '8px', border: '1px solid black' }}>{formData.dateOfVisit}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '8px', border: '1px solid black', fontWeight: 'bold' }}>Duration of Visit:</td>
+              <td style={{ padding: '8px', border: '1px solid black' }}>{formData.durationOfVisit}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Evaluation Grid */}
+        <h4 style={{ fontSize: '16px', margin: '20px 0 10px 0' }}>Part A: Evaluation of Students</h4>
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px', textAlign: 'center' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f0f0f0' }}>
+              <th style={{ padding: '10px', border: '1px solid black', textAlign: 'left', width: '40%' }}>Evaluation Criteria</th>
+              <th style={{ padding: '10px', border: '1px solid black' }}>Excellent</th>
+              <th style={{ padding: '10px', border: '1px solid black' }}>Very Good</th>
+              <th style={{ padding: '10px', border: '1px solid black' }}>Good</th>
+              <th style={{ padding: '10px', border: '1px solid black' }}>Fair</th>
+              <th style={{ padding: '10px', border: '1px solid black' }}>Poor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              { key: 'technicalSkills', label: 'Technical Skills / Domain Knowledge' },
+              { key: 'communicationSkills', label: 'Communication Skills' },
+              { key: 'problemSolving', label: 'Problem Solving Ability' },
+              { key: 'leadership', label: 'Leadership Qualities' },
+              { key: 'overallPerformance', label: 'Overall Performance' }
+            ].map((item) => (
+              <tr key={item.key}>
+                <td style={{ padding: '8px', border: '1px solid black', textAlign: 'left' }}>{item.label}</td>
+                {['excellent', 'very-good', 'good', 'fair', 'poor'].map((rating) => (
+                  <td key={rating} style={{ padding: '8px', border: '1px solid black', fontSize: '18px' }}>
+                    {formData[item.key] === rating ? '☑' : '☐'}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Text Responses */}
+        <h4 style={{ fontSize: '16px', margin: '20px 0 10px 0' }}>Part B: Additional Feedback</h4>
+        <div style={{ border: '1px solid black', padding: '15px', marginBottom: '15px', minHeight: '80px' }}>
+          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>Any specific areas where students need improvement?</p>
+          <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{formData.improvements || 'N/A'}</p>
+        </div>
+        
+        <div style={{ border: '1px solid black', padding: '15px', marginBottom: '20px', minHeight: '80px' }}>
+          <p style={{ margin: '0 0 10px 0', fontWeight: 'bold' }}>Any other suggestions / feedback for the institute?</p>
+          <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{formData.suggestions || 'N/A'}</p>
+        </div>
+
+        {/* Page Break for Signatures to ensure they aren't awkwardly cut off */}
+        <div style={{ pageBreakInside: 'avoid', marginTop: '50px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            <div>
+              <p style={{ margin: '0 0 5px 0' }}>Date: .......................................</p>
+              <p style={{ margin: '0' }}>Place: .......................................</p>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '250px' }}>
+              {signatureDataUrl ? (
+                <img id="pdf-signature-image" src={signatureDataUrl} alt="Signature" style={{ height: '70px', width: 'auto', objectFit: 'contain', borderBottom: '1px dashed black', marginBottom: '5px' }} />
+              ) : (
+                <div id="pdf-signature-placeholder" style={{ width: '200px', borderBottom: '1px dashed black', height: '50px', marginBottom: '5px' }}></div>
+              )}
+              <div style={{ fontWeight: 'bold', paddingTop: '5px' }}>Signature of the Evaluating Person</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
