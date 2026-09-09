@@ -174,7 +174,7 @@ function App() {
     <div className="app-container">
       <div className="card">
         <div className="header">
-          <img src="/logo.png" alt="NIT Rourkela Logo" />
+          <img src="/logo.png?v=2" alt="NIT Rourkela Logo" />
           <h2>Career Development Centre</h2>
           <h2>National Institute of Technology Rourkela</h2>
           <p>Rourkela-769008, Odisha</p>
@@ -346,7 +346,7 @@ function App() {
       {/* Hidden layout for PDF Generation */}
       <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', padding: '40px', backgroundColor: 'white', color: 'black', fontFamily: 'serif' }}>
         <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <img src="/logo.png" alt="Logo" style={{ width: '80px', display: 'block', margin: '0 auto 10px' }} />
+          <img src="/logo.png?v=2" alt="Logo" style={{ width: '80px', display: 'block', margin: '0 auto 10px' }} />
           <div style={{ fontSize: '14px', fontWeight: 'bold' }}>Career Development Centre</div>
           <div style={{ fontSize: '14px', fontWeight: 'bold' }}>National Institute of Technology Rourkela</div>
           <div style={{ fontSize: '12px' }}>Rourkela-769008, Odisha</div>
@@ -410,7 +410,7 @@ function App() {
         
         {/* Letterhead */}
         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '2px solid black', paddingBottom: '10px', marginBottom: '20px' }}>
-          <img src="/logo.png" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
+          <img src="/logo.png?v=2" alt="NIT Rourkela Logo" style={{ width: '80px', height: '80px', marginRight: '20px' }} />
           <div style={{ textAlign: 'center', flexGrow: 1 }}>
             <h1 style={{ margin: '0', fontSize: '24px', textTransform: 'uppercase' }}>National Institute of Technology Rourkela</h1>
             <h2 style={{ margin: '5px 0', fontSize: '18px' }}>Career Development Centre</h2>
