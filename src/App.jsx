@@ -357,133 +357,86 @@ function App() {
           </div>
         </div>
 
-        {/* Basic Info Table */}
-        <div style={{ fontSize: '13px' }}>
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px' }}>Recruitment Statistics:</h3>
-          <p style={{ margin: '4px 0' }}>➢ Name of the Company: <strong>{formData.companyName}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Date of visit: <strong>{formData.visitDate}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Duration of visit: <strong>{formData.visitDuration}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Concerned Company personnel: <strong>{formData.personnel}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Branches eligible: <strong>{formData.branches}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Number of students selected/shortlisted: <strong>{formData.studentsSelected}</strong></p>
+        {/* Basic Info */}
+        <div style={{ fontSize: '14px', lineHeight: '1.6' }}>
+          <p style={{ textDecoration: 'underline', fontWeight: 'bold', margin: '0 0 10px 0' }}>Recruitment Statistics:</p>
+          <p style={{ margin: '6px 0' }}>➢ Name of the Company: {formData.companyName}</p>
+          <p style={{ margin: '6px 0' }}>➢ Date & duration of visit: {formData.visitDate} {formData.visitDuration ? `(${formData.visitDuration})` : ''}</p>
+          <p style={{ margin: '6px 0' }}>➢ Concerned Company personnel: {formData.personnel}</p>
+          <p style={{ margin: '6px 0' }}>➢ Branches eligible: {formData.branches}</p>
+          <p style={{ margin: '6px 0' }}>➢ Number of students selected/shortlisted: {formData.studentsSelected}</p>
           
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px' }}>Our hospitality</h3>
-          <h4 style={{ textDecoration: 'underline', fontSize: '13px', margin: '10px 0 5px 0' }}>Travel:</h4>
-          <p style={{ margin: '4px 0' }}>➢ Did you find it convenient to travel to/in Rourkela? <strong>{formData.travelConvenient}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Were necessary travel arrangements made while in campus/at Rourkela? <strong>{formData.travelArrangements}</strong></p>
-          <p style={{ margin: '4px 0' }}>➢ Please share with us, problems, if any, which you had to face during your travel: <strong>{formData.travelProblems}</strong></p>
-          <p style={{ margin: '4px 0' }}>Was immediate action taken? <strong>{formData.travelActionTaken}</strong></p>
+          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px', marginBottom: '5px' }}>Our hospitality</h3>
+          <h4 style={{ textDecoration: 'underline', fontSize: '14px', margin: '10px 0 5px 0' }}>Travel:</h4>
+          <p style={{ margin: '6px 0' }}>➢ Did you find it convenient to travel to/in Rourkela? ({formData.travelConvenient || '   '})</p>
+          <p style={{ margin: '6px 0' }}>➢ Were necessary travel arrangements made while in campus/at Rourkela? ({formData.travelArrangements || '   '})</p>
+          <p style={{ margin: '6px 0' }}>➢ Please share with us, problems, if any, which you had to face during your travel: {formData.travelProblems}</p>
+          <p style={{ margin: '6px 0' }}>Was immediate action taken? ({formData.travelActionTaken || '   '})</p>
           
-          <h4 style={{ textDecoration: 'underline', fontSize: '13px', marginTop: '20px', marginBottom: '5px' }}>Accommodation:</h4>
-          <p style={{ margin: '4px 0 10px 0' }}>How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory</p>
+          <p style={{ margin: '15px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Accommodation:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
           
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px', textAlign: 'center', fontSize: '13px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f0f0f0' }}>
-                <th style={{ padding: '6px', border: '1px solid black', textAlign: 'left', width: '60%' }}>Criteria</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>A</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>B</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>C</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>D</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { key: 'accFirstImpression', label: '1. Your first impression' },
-                { key: 'accAmbience', label: '2. Ambience, décor, spaciousness' },
-                { key: 'accFacilities', label: '3. Room facilities like air conditioning, TV, etc.' },
-                { key: 'accSanitation', label: '4. Sanitation facilities and cleanliness' },
-                { key: 'accServices', label: '5. Room services' },
-                { key: 'accFood', label: '6. Quality of food/refreshments served' },
-                { key: 'accWarmth', label: '7. The warmth and friendliness of the staff' }
-              ].map((item) => (
-                <tr key={item.key}>
-                  <td style={{ padding: '6px', border: '1px solid black', textAlign: 'left' }}>{item.label}</td>
-                  {['A', 'B', 'C', 'D'].map((rating) => (
-                    <td key={rating} style={{ padding: '6px', border: '1px solid black', fontSize: '16px' }}>
-                      {formData[item.key] === rating ? '☑' : '☐'}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p style={{ margin: '4px 0' }}>Please share with us, problems, if any, which you had to face during your stay: <strong>{formData.stayProblems}</strong></p>
-          <p style={{ margin: '4px 0' }}>Was immediate action taken? <strong>{formData.stayActionTaken}</strong></p>
+          <div style={{ paddingLeft: '20px' }}>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Your first impression</span><span>: {formData.accFirstImpression}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Ambience, décor, spaciousness</span><span>: {formData.accAmbience}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Room facilities like air conditioning, TV, etc.:</span><span>: {formData.accFacilities}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>4. Sanitation facilities and cleanliness</span><span>: {formData.accSanitation}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>5. Room services</span><span>: {formData.accServices}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>6. Quality of food/refreshments served during you course of stay</span><span>: {formData.accFood}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>7. The warmth and friendliness of the staff</span><span>: {formData.accWarmth}</span></p>
+          </div>
+          
+          <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.stayActionTaken || '   '})</p>
+          <p style={{ margin: '6px 0' }}>{formData.stayProblems}</p>
           
           <div style={{ pageBreakBefore: 'always', marginTop: '30px' }}></div>
           
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px' }}>Your recruitment program at our campus:</h3>
-          <p style={{ margin: '4px 0 10px 0' }}>How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory</p>
+          <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Your recruitment program at our campus:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
           
-          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '15px', textAlign: 'center', fontSize: '13px' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f0f0f0' }}>
-                <th style={{ padding: '6px', border: '1px solid black', textAlign: 'left', width: '60%' }}>Criteria</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>A</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>B</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>C</th>
-                <th style={{ padding: '6px', border: '1px solid black' }}>D</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { key: 'recTechFacilities', label: '1. Technical facilities available (audiovisual, internet, etc.)' },
-                { key: 'recCoordination', label: '2. Co-ordination of the Department of training and placement' },
-                { key: 'recAmbience', label: '3. Ambience/comfort level of the venue for PPTs, GD, interviews' }
-              ].map((item) => (
-                <tr key={item.key}>
-                  <td style={{ padding: '6px', border: '1px solid black', textAlign: 'left' }}>{item.label}</td>
-                  {['A', 'B', 'C', 'D'].map((rating) => (
-                    <td key={rating} style={{ padding: '6px', border: '1px solid black', fontSize: '16px' }}>
-                      {formData[item.key] === rating ? '☑' : '☐'}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p style={{ margin: '4px 0' }}>Please share with us, problems, if any, which you had to face: <strong>{formData.recProblems}</strong></p>
-          <p style={{ margin: '4px 0' }}>Was immediate action taken? <strong>{formData.recActionTaken}</strong></p>
+          <div style={{ paddingLeft: '20px' }}>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Technical facilities available like audiovisual aid, internet facilities, etc.</span><span>: {formData.recTechFacilities}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Co-ordination of the Department of training and placement (staff and coordinators)</span><span>: {formData.recCoordination}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>3. Ambience/comfort level of the venue for PPT's, group discussion and interviews</span><span>: {formData.recAmbience}</span></p>
+          </div>
+          
+          <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.recActionTaken || '   '})</p>
+          <p style={{ margin: '6px 0' }}>{formData.recProblems}</p>
 
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px' }}>Our campus and students:</h3>
-          <p style={{ margin: '4px 0 10px 0' }}>How would you rate the following?</p>
-          <ul style={{ listStyleType: 'none', paddingLeft: '0', margin: '0 0 15px 0' }}>
-            <li style={{ margin: '4px 0' }}>1. Campus arena and the infrastructure at hand: <strong>{formData.camArena}</strong></li>
-            <li style={{ margin: '4px 0' }}>2. Intellectual capital: <strong>{formData.camCapital}</strong></li>
-          </ul>
+          <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Our campus and students:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
           
-          <p style={{ margin: '15px 0 5px 0' }}>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
-          <div style={{ borderBottom: '1px dotted black', paddingBottom: '4px', minHeight: '20px' }}><strong>{formData.impressiveQualities}</strong></div>
+          <div style={{ paddingLeft: '20px' }}>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>1. Campus arena and the infrastructure at hand</span><span>: {formData.camArena}</span></p>
+            <p style={{ margin: '6px 0', display: 'flex', justifyContent: 'space-between' }}><span>2. Intellectual capital</span><span>: {formData.camCapital}</span></p>
+          </div>
           
-          <p style={{ margin: '15px 0 5px 0' }}>Please comment on areas where the students have a scope for improvement / any quality which is highly essential to be improved and worked upon:</p>
-          <div style={{ borderBottom: '1px dotted black', paddingBottom: '4px', minHeight: '20px' }}><strong>{formData.areasForImprovement}</strong></div>
+          <p style={{ margin: '20px 0 5px 0' }}>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
+          <div style={{ minHeight: '30px' }}>{formData.impressiveQualities}</div>
           
-          <h3 style={{ textDecoration: 'underline', fontSize: '15px', marginTop: '20px' }}>General Review:</h3>
-          <p style={{ margin: '15px 0 5px 0' }}>Overall comments/suggestions:</p>
-          <div style={{ borderBottom: '1px dotted black', paddingBottom: '4px', minHeight: '20px' }}><strong>{formData.overallComments}</strong></div>
+          <p style={{ margin: '20px 0 5px 0' }}>Please comment on areas where the students have a scope for improvement/any quality which is highly essential to be improved and worked upon:</p>
+          <div style={{ minHeight: '30px' }}>{formData.areasForImprovement}</div>
           
-          <p style={{ margin: '15px 0' }}>Would you like to visit our campus again? <strong>{formData.visitAgain}</strong></p>
+          <p style={{ fontWeight: 'bold', textDecoration: 'underline', marginTop: '30px', marginBottom: '5px' }}>General Review:</p>
+          <p style={{ margin: '5px 0' }}>Overall comments/suggestions:</p>
+          <div style={{ minHeight: '30px' }}>{formData.overallComments}</div>
           
+          <p style={{ margin: '20px 0' }}>Would you like to visit our campus again? ({formData.visitAgain || '   '})</p>
+          
+          <p style={{ margin: '20px 0' }}>Thank you!</p>
         </div>
 
         {/* Page Break for Signatures */}
-        <div style={{ pageBreakInside: 'avoid', marginTop: '50px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-            <div>
-              <p style={{ margin: '0 0 5px 0' }}>Date: .......................................</p>
-              <p style={{ margin: '0' }}>Place: .......................................</p>
-            </div>
+        <div style={{ pageBreakInside: 'avoid', marginTop: '40px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end' }}>
             
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '250px' }}>
               {signatureDataUrl ? (
-                <img id="pdf-signature-image" src={signatureDataUrl} alt="Signature" style={{ height: '70px', width: 'auto', objectFit: 'contain', borderBottom: '1px dashed black', marginBottom: '5px' }} />
+                <img id="pdf-signature-image" src={signatureDataUrl} alt="Signature" style={{ height: '50px', width: 'auto', objectFit: 'contain', borderBottom: '1px solid black', marginBottom: '5px' }} />
               ) : (
-                <div id="pdf-signature-placeholder" style={{ width: '200px', borderBottom: '1px dashed black', height: '50px', marginBottom: '5px' }}></div>
+                <div id="pdf-signature-placeholder" style={{ width: '200px', borderBottom: '1px solid black', height: '50px', marginBottom: '5px' }}></div>
               )}
-              <div style={{ fontWeight: 'bold', paddingTop: '5px' }}>Signature of the Evaluating Person</div>
+              <div style={{ fontWeight: 'bold', paddingTop: '5px', textDecoration: 'underline' }}>Signature of Recruiter</div>
             </div>
           </div>
+          <div style={{ textAlign: 'center', marginTop: '40px', fontWeight: 'bold' }}>17</div>
         </div>
 
       </div>
