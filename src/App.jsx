@@ -343,68 +343,7 @@ function App() {
         </form>
       </div>
 
-      {/* Hidden layout for PDF Generation */}
-      <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', padding: '40px', backgroundColor: 'white', color: 'black', fontFamily: 'serif' }}>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <img src="/logo.png?v=2" alt="Logo" style={{ width: '80px', display: 'block', margin: '0 auto 10px' }} />
-          <div style={{ fontSize: '14px', fontWeight: 'bold' }}>Career Development Centre</div>
-          <div style={{ fontSize: '14px', fontWeight: 'bold' }}>National Institute of Technology Rourkela</div>
-          <div style={{ fontSize: '12px' }}>Rourkela-769008, Odisha</div>
-          <div style={{ fontSize: '12px' }}>Phone: +91-661-2462181</div>
-          <div style={{ fontSize: '12px' }}>Email: hod-cdc@nitrkl.ac.in / placements@nitrkl.ac.in</div>
-          <h2 style={{ fontSize: '16px', margin: '20px 0', textDecoration: 'underline' }}>RECRUITER FEEDBACK</h2>
-        </div>
 
-        <div style={{ fontSize: '12px' }}>
-          <h3 style={{ textDecoration: 'underline', fontSize: '14px' }}>Recruitment Statistics:</h3>
-          <p>➢ Name of the Company: <strong>{formData.companyName}</strong></p>
-          <p>➢ Date of visit: <strong>{formData.visitDate}</strong></p>
-          <p>➢ Duration of visit: <strong>{formData.visitDuration}</strong></p>
-          <p>➢ Concerned Company personnel: <strong>{formData.personnel}</strong></p>
-          <p>➢ Branches eligible: <strong>{formData.branches}</strong></p>
-          <p>➢ Number of students selected/shortlisted: <strong>{formData.studentsSelected}</strong></p>
-          
-          <h3 style={{ textDecoration: 'underline', fontSize: '14px', marginTop: '20px' }}>Our hospitality</h3>
-          <h4 style={{ textDecoration: 'underline', fontSize: '12px' }}>Travel:</h4>
-          <p>➢ Did you find it convenient to travel to/in Rourkela? ({formData.travelConvenient || '   '})</p>
-          <p>➢ Were necessary travel arrangements made while in campus/at Rourkela? ({formData.travelArrangements || '   '})</p>
-          <p>➢ Please share with us, problems, if any, which you had to face during your travel: {formData.travelProblems}</p>
-          <p>Was immediate action taken? ({formData.travelActionTaken || '   '})</p>
-          
-          <h4 style={{ textDecoration: 'underline', fontSize: '12px', marginTop: '15px' }}>Accommodation:</h4>
-          <p>How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
-          <ol style={{ paddingLeft: '20px' }}>
-            <li>Your first impression: <strong>{formData.accFirstImpression}</strong></li>
-            <li>Ambience, décor, spaciousness: <strong>{formData.accAmbience}</strong></li>
-            <li>Room facilities like air conditioning, TV, etc.: <strong>{formData.accFacilities}</strong></li>
-            <li>Sanitation facilities and cleanliness: <strong>{formData.accSanitation}</strong></li>
-            <li>Room services: <strong>{formData.accServices}</strong></li>
-            <li>Quality of food/refreshments served during you course of stay: <strong>{formData.accFood}</strong></li>
-            <li>The warmth and friendliness of the staff: <strong>{formData.accWarmth}</strong></li>
-          </ol>
-          <p>Please share with us, problems, if any, which you had to face during your stay: {formData.stayProblems}</p>
-          <p>Was immediate action taken? ({formData.stayActionTaken || '   '})</p>
-          
-          <div style={{ pageBreakBefore: 'always', marginTop: '40px' }}></div>
-          
-          <h3 style={{ textDecoration: 'underline', fontSize: '14px' }}>Your recruitment program at our campus:</h3>
-          <p>How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory</p>
-          <ol style={{ paddingLeft: '20px' }}>
-            <li>Technical facilities available like audiovisual aid, internet facilities, etc.: <strong>{formData.recTechFacilities}</strong></li>
-            <li>Co-ordination of the Department of training and placement: <strong>{formData.recCoordination}</strong></li>
-            <li>Ambience/comfort level of the venue for PPT's, group discussion and interviews: <strong>{formData.recAmbience}</strong></li>
-          </ol>
-          <p>Please share with us, problems, if any, which you had to face during your stay: {formData.recProblems}</p>
-          <p>Was immediate action taken? ({formData.recActionTaken || '   '})</p>
-          
-          <h3 style={{ textDecoration: 'underline', fontSize: '14px', marginTop: '20px' }}>Our campus and students:</h3>
-          <p>How would you rate the following?</p>
-          <ol style={{ paddingLeft: '20px' }}>
-            <li>Campus arena and the infrastructure at hand: <strong>{formData.camArena}</strong></li>
-            <li>Intellectual capital: <strong>{formData.camCapital}</strong></li>
-          </ol>
-          <p>Please comment on any quality of the students shortlisted/selected by your recruitment process that you found to be impressive:</p>
-          <p style={{ minHeight: '40px' }}><strong>{formData.impressiveQualities}</strong></p>
       {/* Printable PDF Layout (Visually hidden but rendered for html2canvas) */}
       <div id="pdf-content" ref={pdfContentRef} style={{ width: '800px', padding: '40px', backgroundColor: 'white', color: 'black', fontFamily: '"Times New Roman", Times, serif', position: 'absolute', top: '-9999px', left: '-9999px', fontSize: '14px', lineHeight: '1.5' }}>
         
