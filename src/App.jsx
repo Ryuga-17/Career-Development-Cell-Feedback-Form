@@ -407,6 +407,8 @@ function App() {
           <p style={{ margin: '15px 0 6px 0' }}>Please share with us, problems, if any, which you had to face during your stay. Was immediate action taken? ({formData.recActionTaken || '   '})</p>
           <p style={{ margin: '6px 0' }}>{formData.recProblems}</p>
 
+          <div style={{ pageBreakBefore: 'always', marginTop: '30px' }}></div>
+
           <p style={{ margin: '20px 0 10px 0', fontWeight: 'bold' }}><span style={{ textDecoration: 'underline' }}>Our campus and students:</span> How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.</p>
           
           <div style={{ paddingLeft: '20px' }}>
