@@ -80,8 +80,9 @@ function App() {
     await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-      const imgData = canvas.toDataURL('image/png');
+      const canvas = await html2canvas(element, { scale: 1.5, useCORS: true });
+      // Compress the image heavily as a JPEG instead of a massive PNG
+      const imgData = canvas.toDataURL('image/jpeg', 0.7);
       
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -92,13 +93,13 @@ function App() {
       let heightLeft = imgHeight;
       let position = 0;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
       }
       
