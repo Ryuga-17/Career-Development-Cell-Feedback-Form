@@ -262,6 +262,9 @@ function App() {
           </div>
 
           <h3 className="section-title">Your recruitment program at our campus</h3>
+          <div className="rating-legend">
+            How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.
+          </div>
           <table className="rating-table">
             <thead>
               <tr>
@@ -288,6 +291,9 @@ function App() {
           </div>
 
           <h3 className="section-title">Our campus and students</h3>
+          <div className="rating-legend">
+            How would you rate the following? (A) Excellent/Impressive, (B) Good, (C) Satisfactory and (D) Unsatisfactory/Needs improvement, upgradation, etc.
+          </div>
           <table className="rating-table">
             <thead>
               <tr>
